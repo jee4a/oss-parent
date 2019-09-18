@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jee4a.oss.auth.mapper.SysOperationLogMapper" >
+  <resultMap id="BaseResultMap" type="com.jee4a.oss.auth.model.sys.SysOperationLog" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="user_name" property="userName" jdbcType="VARCHAR" />
+    <result column="operation" property="operation" jdbcType="VARCHAR" />
+    <result column="method" property="method" jdbcType="VARCHAR" />
+    <result column="url" property="url" jdbcType="VARCHAR" />
+    <result column="params" property="params" jdbcType="VARCHAR" />
+    <result column="exe_time" property="exeTime" jdbcType="BIGINT" />
+    <result column="ip" property="ip" jdbcType="VARCHAR" />
+    <result column="creator" property="creator" jdbcType="INTEGER" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, user_name, operation, method, url, params, exe_time, ip, creator, create_time
+  </sql>
+  <select id="queryPage" resultMap="BaseResultMap"  >
+    select 
+    <include refid="Base_Column_List" />
+    from sys_operation_log 
+    <where>
+     <if test="record.operation !=null and record.operation !='' ">
+    	operation  =  #{record.operation,jdbcType=VARCHAR} 
+    </if> 
+    </where>
+    order by create_time desc 
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from sys_operation_log
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from sys_operation_log
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.jee4a.oss.auth.model.sys.SysOperationLog" >
+    insert into sys_operation_log (id, user_name, operation, 
+      method, url, params, 
+      exe_time, ip, creator, create_time
+      )
+    values (#{id,jdbcType=BIGINT}, #{userName,jdbcType=VARCHAR}, #{operation,jdbcType=VARCHAR}, 
+      #{method,jdbcType=VARCHAR}, #{url,jdbcType=VARCHAR}, #{params,jdbcType=VARCHAR}, 
+      #{exeTime,jdbcType=BIGINT}, #{ip,jdbcType=VARCHAR}, #{creator,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.jee4a.oss.auth.model.sys.SysOperationLog" >
+    insert into sys_operation_log
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="userName != null" >
+        user_name,
+      </if>
+      <if test="operation != null" >
+        operation,
+      </if>
+      <if test="method != null" >
+        method,
+      </if>
+      <if test="url != null" >
+        url,
+      </if>
+      <if test="params != null" >
+        params,
+      </if>
+      <if test="exeTime != null" >
+        exe_time,
+      </if>
+      <if test="ip != null" >
+        ip,
+      </if>
+      <if test="creator != null" >
+        creator,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="userName != null" >
+        #{userName,jdbcType=VARCHAR},
+      </if>
+      <if test="operation != null" >
+        #{operation,jdbcType=VARCHAR},
+      </if>
+      <if test="method != null" >
+        #{method,jdbcType=VARCHAR},
+      </if>
+      <if test="url != null" >
+        #{url,jdbcType=VARCHAR},
+      </if>
+      <if test="params != null" >
+        #{params,jdbcType=VARCHAR},
+      </if>
+      <if test="exeTime != null" >
+        #{exeTime,jdbcType=BIGINT},
+      </if>
+      <if test="ip != null" >
+        #{ip,jdbcType=VARCHAR},
+      </if>
+      <if test="creator != null" >
+        #{creator,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.jee4a.oss.auth.model.sys.SysOperationLog" >
+    update sys_operation_log
+    <set >
+      <if test="userName != null" >
+        user_name = #{userName,jdbcType=VARCHAR},
+      </if>
+      <if test="operation != null" >
+        operation = #{operation,jdbcType=VARCHAR},
+      </if>
+      <if test="method != null" >
+        method = #{method,jdbcType=VARCHAR},
+      </if>
+      <if test="url != null" >
+        url = #{url,jdbcType=VARCHAR},
+      </if>
+      <if test="params != null" >
+        params = #{params,jdbcType=VARCHAR},
+      </if>
+      <if test="exeTime != null" >
+        exe_time = #{exeTime,jdbcType=BIGINT},
+      </if>
+      <if test="ip != null" >
+        ip = #{ip,jdbcType=VARCHAR},
+      </if>
+      <if test="creator != null" >
+        creator = #{creator,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.jee4a.oss.auth.model.sys.SysOperationLog" >
+    update sys_operation_log
+    set user_name = #{userName,jdbcType=VARCHAR},
+      operation = #{operation,jdbcType=VARCHAR},
+      method = #{method,jdbcType=VARCHAR},
+      url = #{url,jdbcType=VARCHAR},
+      params = #{params,jdbcType=VARCHAR},
+      exe_time = #{exeTime,jdbcType=BIGINT},
+      ip = #{ip,jdbcType=VARCHAR},
+      creator = #{creator,jdbcType=INTEGER},
+      create_time = #{createTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>

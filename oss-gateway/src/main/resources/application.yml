@@ -1,0 +1,28 @@
+server:
+  port: 8001
+spring:
+  application:
+    name: gateway-server
+  profiles:
+    active: @spring.profiles.active@
+  cloud:
+    gateway:
+      routes:
+        - id: gatewayRout
+          uri: lb://auth-server
+          predicates:
+          - Path=/jee4a/admin/**
+          filters:
+          - StripPrefix=2
+#开启日志
+logging:
+  level:
+    org.springframework.cloud.gateway: debug
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://root:123456@localhost:7001/eureka/
+  instance:
+    prefer-ip-address: true
+    instance-id: microServiceGateway

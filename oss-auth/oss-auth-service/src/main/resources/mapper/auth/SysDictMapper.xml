@@ -1,0 +1,202 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jee4a.oss.auth.mapper.SysDictMapper" >
+  <resultMap id="BaseResultMap" type="com.jee4a.oss.auth.model.sys.SysDict" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="dic_name" property="dicName" jdbcType="VARCHAR" />
+    <result column="dic_type" property="dicType" jdbcType="VARCHAR" />
+    <result column="dic_code" property="dicCode" jdbcType="VARCHAR" />
+    <result column="dic_value" property="dicValue" jdbcType="VARCHAR" />
+    <result column="order_by" property="orderBy" jdbcType="INTEGER" />
+    <result column="remark" property="remark" jdbcType="VARCHAR" />
+    <result column="is_deleted" property="isDeleted" jdbcType="TINYINT" />
+    <result column="creator" property="creator" jdbcType="INTEGER" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="updator" property="updator" jdbcType="INTEGER" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, dic_name, dic_type, dic_code, dic_value, order_by, remark, is_deleted, creator, create_time, 
+    updator, update_time
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from sys_dict
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from sys_dict
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.jee4a.oss.auth.model.sys.SysDict" >
+    insert into sys_dict (id, dic_name, dic_type, 
+      dic_code, dic_value, order_by, 
+      remark, is_deleted, creator, 
+      create_time, updator, update_time
+      )
+    values (#{id,jdbcType=INTEGER}, #{dicName,jdbcType=VARCHAR}, #{dicType,jdbcType=VARCHAR}, 
+      #{dicCode,jdbcType=VARCHAR}, #{dicValue,jdbcType=VARCHAR}, #{orderBy,jdbcType=INTEGER}, 
+      #{remark,jdbcType=VARCHAR}, #{isDeleted,jdbcType=TINYINT}, #{creator,jdbcType=INTEGER}, 
+      #{createTime,jdbcType=TIMESTAMP}, #{updator,jdbcType=INTEGER}, #{updateTime,jdbcType=TIMESTAMP}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.jee4a.oss.auth.model.sys.SysDict" >
+    insert into sys_dict
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="dicName != null" >
+        dic_name,
+      </if>
+      <if test="dicType != null" >
+        dic_type,
+      </if>
+      <if test="dicCode != null" >
+        dic_code,
+      </if>
+      <if test="dicValue != null" >
+        dic_value,
+      </if>
+      <if test="orderBy != null" >
+        order_by,
+      </if>
+      <if test="remark != null" >
+        remark,
+      </if>
+      <if test="isDeleted != null" >
+        is_deleted,
+      </if>
+      <if test="creator != null" >
+        creator,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="updator != null" >
+        updator,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="dicName != null" >
+        #{dicName,jdbcType=VARCHAR},
+      </if>
+      <if test="dicType != null" >
+        #{dicType,jdbcType=VARCHAR},
+      </if>
+      <if test="dicCode != null" >
+        #{dicCode,jdbcType=VARCHAR},
+      </if>
+      <if test="dicValue != null" >
+        #{dicValue,jdbcType=VARCHAR},
+      </if>
+      <if test="orderBy != null" >
+        #{orderBy,jdbcType=INTEGER},
+      </if>
+      <if test="remark != null" >
+        #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="isDeleted != null" >
+        #{isDeleted,jdbcType=TINYINT},
+      </if>
+      <if test="creator != null" >
+        #{creator,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updator != null" >
+        #{updator,jdbcType=INTEGER},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.jee4a.oss.auth.model.sys.SysDict" >
+    update sys_dict
+    <set >
+      <if test="dicName != null" >
+        dic_name = #{dicName,jdbcType=VARCHAR},
+      </if>
+      <if test="dicType != null" >
+        dic_type = #{dicType,jdbcType=VARCHAR},
+      </if>
+      <if test="dicCode != null" >
+        dic_code = #{dicCode,jdbcType=VARCHAR},
+      </if>
+      <if test="dicValue != null" >
+        dic_value = #{dicValue,jdbcType=VARCHAR},
+      </if>
+      <if test="orderBy != null" >
+        order_by = #{orderBy,jdbcType=INTEGER},
+      </if>
+      <if test="remark != null" >
+        remark = #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="isDeleted != null" >
+        is_deleted = #{isDeleted,jdbcType=TINYINT},
+      </if>
+      <if test="creator != null" >
+        creator = #{creator,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updator != null" >
+        updator = #{updator,jdbcType=INTEGER},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.jee4a.oss.auth.model.sys.SysDict" >
+    update sys_dict
+    set dic_name = #{dicName,jdbcType=VARCHAR},
+      dic_type = #{dicType,jdbcType=VARCHAR},
+      dic_code = #{dicCode,jdbcType=VARCHAR},
+      dic_value = #{dicValue,jdbcType=VARCHAR},
+      order_by = #{orderBy,jdbcType=INTEGER},
+      remark = #{remark,jdbcType=VARCHAR},
+      is_deleted = #{isDeleted,jdbcType=TINYINT},
+      creator = #{creator,jdbcType=INTEGER},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      updator = #{updator,jdbcType=INTEGER},
+      update_time = #{updateTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  
+  
+  <select id="queryPage" resultMap="BaseResultMap">
+  	select <include refid="Base_Column_List"/> from sys_dict
+  	where is_deleted = 0 
+  	<if test = "dict.dicName != null and dict.dicName !='' ">
+  		and dic_name =#{dict.dicName,jdbcType=VARCHAR}
+  	</if>
+  	order by create_time desc
+  </select>
+  
+   <select id="selectListByType" resultMap="BaseResultMap">
+  	select 
+  	<include refid="Base_Column_List"/> 
+  	from sys_dict
+  	where is_deleted = 0 
+  		and dic_type =#{dicType,jdbcType=VARCHAR}
+  	order by create_time desc
+  </select>
+  
+  
+  <select id="selectByTypeAndCode" parameterType="java.lang.String" resultMap="BaseResultMap">
+  	select <include refid="Base_Column_List"/>from sys_dict 
+  	where dic_type = #{type,jdbcType=VARCHAR} and dic_code = #{code,jdbcType=VARCHAR}
+  </select>
+</mapper>

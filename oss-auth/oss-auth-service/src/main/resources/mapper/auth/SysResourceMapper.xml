@@ -1,0 +1,248 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jee4a.oss.auth.mapper.SysResourceMapper" >
+  <resultMap id="BaseResultMap" type="com.jee4a.oss.auth.model.sys.SysResource" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="parent_id" property="parentId" jdbcType="INTEGER" />
+    <result column="resource_name" property="resourceName" jdbcType="VARCHAR" />
+    <result column="url" property="url" jdbcType="VARCHAR" />
+    <result column="perms" property="perms" jdbcType="VARCHAR" />
+    <result column="resource_type" property="resourceType" jdbcType="TINYINT" />
+    <result column="icon" property="icon" jdbcType="VARCHAR" />
+    <result column="order_by" property="orderBy" jdbcType="INTEGER" />
+    <result column="is_deleted" property="isDeleted" jdbcType="TINYINT" />
+    <result column="creator" property="creator" jdbcType="INTEGER" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="updator" property="updator" jdbcType="INTEGER" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="is_show" property="isShow" jdbcType="TINYINT" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, parent_id, resource_name, url, perms, resource_type, icon, order_by, is_deleted, creator, create_time, 
+    updator, update_time, is_show
+  </sql>
+  	<select id="selectNotButtonList"  resultMap="BaseResultMap" resultType="com.jee4a.oss.auth.model.sys.SysResource">
+		select
+        sr.*
+        from sys_resource as sr
+        LEFT join sys_role_resource as srr on sr.id=srr.resource_id and srr.is_deleted= 0
+        LEFT join sys_role_org as sro on sro.role_id = srr.role_id
+        where sr.resource_type <![CDATA[ <> 2 ]]>  and sr.is_deleted = 0
+        <if test="orgIdList != null">
+            and sro.org_id in
+            <foreach collection="orgIdList" item="item" index="index" open="(" close=")" separator=",">
+                #{item}
+            </foreach>
+        </if>
+        GROUP  by sr.id
+        order by sr.order_by asc
+	</select>
+
+	<select id="selectListByParentId" resultMap="BaseResultMap" resultType="com.jee4a.oss.auth.model.sys.SysResource">
+        select
+        <include refid="Base_Column_List" />
+        from sys_resource
+        where parent_id = #{parentId,jdbcType=INTEGER} and
+        is_deleted = 0 and is_show = 1 order by
+        order_by
+	</select>
+
+	<select id="selectList" resultMap="BaseResultMap" parameterType="com.jee4a.oss.auth.model.sys.SysResource">
+        select
+        sr.*
+        from sys_resource as sr
+        LEFT join sys_role_resource as srr on sr.id=srr.resource_id and srr.is_deleted= 0
+        LEFT join sys_role_org as sro on sro.role_id = srr.role_id
+		<where>
+            sr.id =sr.id
+			<if test="parentId != null">
+				and sr.parent_id = #{parentId,jdbcType=INTEGER}
+			</if>
+			<if test="resourceType != null ">
+				and sr.resource_type = #{resourceType,jdbcType=TINYINT}
+			</if>
+            <if test="orgIdList != null">
+                and sro.org_id in
+                <foreach collection="orgIdList" item="item" index="index" open="(" close=")" separator=",">
+                    #{item}
+                </foreach>
+            </if>
+			and sr.is_deleted = 0 GROUP  by sr.id order by sr.order_by
+		</where>
+	</select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from sys_resource
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from sys_resource
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.jee4a.oss.auth.model.sys.SysResource" >
+    insert into sys_resource (id, parent_id, resource_name, 
+      url, perms, resource_type, icon, 
+      order_by, is_deleted, creator, 
+      create_time, updator, update_time, 
+      is_show)
+    values (#{id,jdbcType=INTEGER}, #{parentId,jdbcType=INTEGER}, #{resourceName,jdbcType=VARCHAR}, 
+      #{url,jdbcType=VARCHAR}, #{perms,jdbcType=VARCHAR}, #{resourceType,jdbcType=TINYINT}, #{icon,jdbcType=VARCHAR}, 
+      #{orderBy,jdbcType=INTEGER}, #{isDeleted,jdbcType=TINYINT}, #{creator,jdbcType=INTEGER}, 
+      #{createTime,jdbcType=TIMESTAMP}, #{updator,jdbcType=INTEGER}, #{updateTime,jdbcType=TIMESTAMP}, 
+      #{isShow,jdbcType=TINYINT})
+  </insert>
+  <insert id="insertSelective" parameterType="com.jee4a.oss.auth.model.sys.SysResource" >
+    insert into sys_resource
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="parentId != null" >
+        parent_id,
+      </if>
+      <if test="resourceName != null" >
+        resource_name,
+      </if>
+      <if test="url != null" >
+        url,
+      </if>
+      <if test="perms != null" >
+        perms,
+      </if>
+      <if test="resourceType != null" >
+        resource_type,
+      </if>
+      <if test="icon != null" >
+        icon,
+      </if>
+      <if test="orderBy != null" >
+        order_by,
+      </if>
+      <if test="isDeleted != null" >
+        is_deleted,
+      </if>
+      <if test="creator != null" >
+        creator,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="updator != null" >
+        updator,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+      <if test="isShow != null" >
+        is_show,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="parentId != null" >
+        #{parentId,jdbcType=INTEGER},
+      </if>
+      <if test="resourceName != null" >
+        #{resourceName,jdbcType=VARCHAR},
+      </if>
+      <if test="url != null" >
+        #{url,jdbcType=VARCHAR},
+      </if>
+      <if test="perms != null" >
+        #{perms,jdbcType=VARCHAR},
+      </if>
+      <if test="resourceType != null" >
+        #{resourceType,jdbcType=TINYINT},
+      </if>
+      <if test="icon != null" >
+        #{icon,jdbcType=VARCHAR},
+      </if>
+      <if test="orderBy != null" >
+        #{orderBy,jdbcType=INTEGER},
+      </if>
+      <if test="isDeleted != null" >
+        #{isDeleted,jdbcType=TINYINT},
+      </if>
+      <if test="creator != null" >
+        #{creator,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updator != null" >
+        #{updator,jdbcType=INTEGER},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isShow != null" >
+        #{isShow,jdbcType=TINYINT},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.jee4a.oss.auth.model.sys.SysResource" >
+    update sys_resource
+    <set >
+      <if test="parentId != null" >
+        parent_id = #{parentId,jdbcType=INTEGER},
+      </if>
+      <if test="resourceName != null" >
+        resource_name = #{resourceName,jdbcType=VARCHAR},
+      </if>
+      <if test="url != null" >
+        url = #{url,jdbcType=VARCHAR},
+      </if>
+      <if test="perms != null" >
+        perms = #{perms,jdbcType=VARCHAR},
+      </if>
+      <if test="resourceType != null" >
+        resource_type = #{resourceType,jdbcType=TINYINT},
+      </if>
+      <if test="icon != null" >
+        icon = #{icon,jdbcType=VARCHAR},
+      </if>
+      <if test="orderBy != null" >
+        order_by = #{orderBy,jdbcType=INTEGER},
+      </if>
+      <if test="isDeleted != null" >
+        is_deleted = #{isDeleted,jdbcType=TINYINT},
+      </if>
+      <if test="creator != null" >
+        creator = #{creator,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updator != null" >
+        updator = #{updator,jdbcType=INTEGER},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isShow != null" >
+        is_show = #{isShow,jdbcType=TINYINT},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.jee4a.oss.auth.model.sys.SysResource" >
+    update sys_resource
+    set parent_id = #{parentId,jdbcType=INTEGER},
+      resource_name = #{resourceName,jdbcType=VARCHAR},
+      url = #{url,jdbcType=VARCHAR},
+      perms = #{perms,jdbcType=VARCHAR},
+      resource_type = #{resourceType,jdbcType=TINYINT},
+      icon = #{icon,jdbcType=VARCHAR},
+      order_by = #{orderBy,jdbcType=INTEGER},
+      is_deleted = #{isDeleted,jdbcType=TINYINT},
+      creator = #{creator,jdbcType=INTEGER},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      updator = #{updator,jdbcType=INTEGER},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      is_show = #{isShow,jdbcType=TINYINT}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

@@ -1,0 +1,18 @@
+server:
+  port: 8001
+  servlet:    context-path: /
+spring:
+  application:
+    name: auth-server
+  profiles:
+    active: @spring.profiles.active@
+  jackson:    date-format: yyyy-MM-dd HH:mm:ss
+
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://root:123456@localhost:7001/eureka/
+  instance:
+    prefer-ip-address: true
+    instance-id: microServiceGateway

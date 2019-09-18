@@ -1,0 +1,274 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jee4a.oss.auth.mapper.SysRoleMapper" >
+  <resultMap id="BaseResultMap" type="com.jee4a.oss.auth.model.sys.SysRole" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="role_name" property="roleName" jdbcType="VARCHAR" />
+    <result column="remark" property="remark" jdbcType="VARCHAR" />
+    <result column="org_id" property="orgId" jdbcType="INTEGER" />
+    <result column="org_name" property="orgName" jdbcType="VARCHAR" />
+    <result column="is_deleted" property="isDeleted" jdbcType="TINYINT" />
+    <result column="creator" property="creator" jdbcType="INTEGER" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="updator" property="updator" jdbcType="INTEGER" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="creator_name" property="creatorName" jdbcType="VARCHAR" />
+    <result column="updator_name" property="updatorName" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List">
+	r.id as id , r.role_name as role_name , r.remark as remark, r.org_id as org_id, r.is_deleted as is_deleted, r.creator as creator, r.create_time as create_time,
+	r.updator as updator,
+	r.update_time as update_time
+  </sql>
+	<!-- 基本的sql查询条件公共引用 -->
+ 	<sql id="searchBy">
+		<trim prefix="where" prefixOverrides="and|or">
+			<!-- <if test=" id !=null">
+				id = #{sysRole.id,jdbcType=BIGINT}
+			</if> -->
+			<if test="roleName !=null  and roleName !=''">
+				and role_name = #{sysRole.roleName,jdbcType=VARCHAR}
+			</if>
+			<if test="remark !=null and remark !=''">
+				and remark = #{sysRole.remark,jdbcType=VARCHAR}
+			</if>
+			<if test="orgId !=null">
+				and org_id = #{sysRole.orgId,jdbcType=BIGINT}
+			</if>
+			<if test="isDeleted !=null">
+				and is_deleted = #{sysRole.isDeleted,jdbcType=BIGINT}
+			</if>
+			<if test="creator !=null and creator !=''">
+				and creator = #{sysRole.creator,jdbcType=VARCHAR}
+			</if>
+			<if test="createTime !=null">
+				and create_time = #{sysRole.createTime,jdbcType=TIMESTAMP}
+			</if>
+			<if test="updator !=null and updator !=''">
+				and updator = #{sysRole.updator,jdbcType=VARCHAR}
+			</if>
+			<if test="updateTime !=null">
+				and update_time = #{sysRole.updateTime,jdbcType=VARCHAR}
+			</if>
+		</trim>
+	</sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    ,o.org_name
+    from sys_role r left join sys_org o on r.org_id = o.id
+    where r.id = #{id,jdbcType=INTEGER}
+  </select>
+  <select id="querySysRoleList" resultMap="BaseResultMap">
+      select
+          sr.id as id,
+          sr.role_name as roleName,
+          sr.create_time as createTime,
+          su.user_name as creatorName,
+          sr.update_time as updateTime,
+          su2.user_name as updatorName
+      from sys_role as sr
+      LEFT JOIN sys_role_org as sro on sro.role_id = sr.id and sro.is_deleted=0
+      LEFT JOIN sys_user as su on su.id = sr.creator
+      LEFT JOIN sys_user as su2 on su2.id = sr.updator
+      where sr.id =sr.id
+	    <if test="record.roleName !=null and record.roleName !='' ">
+	    and	sr.role_name  =  #{record.roleName}
+	    </if>
+	    <if test="record.id !=null and record.id !='' ">
+        and sr.id  =  #{record.id}
+        </if>
+	     <if test="record.createName !=null and record.createName !='' ">
+        AND u.user_name=  #{record.createName}
+        </if>
+         <if test="record.updateName !=null and record.updateName !='' ">
+        AND su2.user_name = #{record.updateName}
+        </if>
+	    <if test="record.beginCreateTime != null and record.beginCreateTime != '' ">
+        <![CDATA[ and   sr.create_time >= #{record.beginCreateTime,jdbcType=TIMESTAMP} ]]>
+        </if>
+        <if test="record.endCreateTime != null and record.endCreateTime !=''">
+        <![CDATA[ and   sr.create_time <= #{record.endCreateTime,jdbcType=TIMESTAMP}  ]]>
+        </if>
+
+        <if test="record.beginUpdateTime != null and record.beginUpdateTime != '' ">
+        <![CDATA[ and  sr.update_time >= #{record.beginUpdateTime,jdbcType=TIMESTAMP} ]]>
+        </if>
+        <if test="record.endUpdateTime != null and record.endUpdateTime !=''">
+        <![CDATA[ and   sr.update_time <= #{record.endUpdateTime,jdbcType=TIMESTAMP}  ]]>
+        </if>
+	    <if test="record.deptIdList != null">
+            and sro.org_id in
+            <foreach collection="record.deptIdList" item="item" index="index" open="(" close=")" separator=",">
+                #{item}
+            </foreach>
+        </if>
+	    
+        order by sr.create_time desc
+		<!-- <include refid="searchBy" /> -->
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from sys_role
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.jee4a.oss.auth.model.sys.SysRole" useGeneratedKeys="true" keyProperty="id" keyColumn="id">
+    insert into sys_role (id, role_name, 
+      remark, org_id, is_deleted, 
+      creator, create_time, updator, 
+      update_time)
+    values (#{id,jdbcType=INTEGER}, #{roleName,jdbcType=VARCHAR}, 
+      #{remark,jdbcType=VARCHAR}, #{orgId,jdbcType=INTEGER}, #{isDeleted,jdbcType=TINYINT}, 
+      #{creator,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}, #{updator,jdbcType=INTEGER}, 
+      #{updateTime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.jee4a.oss.auth.model.sys.SysRole" >
+    insert into sys_role
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="roleName != null" >
+        role_name,
+      </if>
+      <if test="remark != null" >
+        remark,
+      </if>
+      <if test="orgId != null" >
+        org_id,
+      </if>
+      <if test="isDeleted != null" >
+        is_deleted,
+      </if>
+      <if test="creator != null" >
+        creator,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="updator != null" >
+        updator,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="roleName != null" >
+        #{roleName,jdbcType=VARCHAR},
+      </if>
+      <if test="remark != null" >
+        #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="orgId != null" >
+        #{orgId,jdbcType=INTEGER},
+      </if>
+      <if test="isDeleted != null" >
+        #{isDeleted,jdbcType=TINYINT},
+      </if>
+      <if test="creator != null" >
+        #{creator,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updator != null" >
+        #{updator,jdbcType=INTEGER},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.jee4a.oss.auth.model.sys.SysRole" >
+    update sys_role
+    <set >
+      <if test="roleName != null" >
+        role_name = #{roleName,jdbcType=VARCHAR},
+      </if>
+      <if test="remark != null" >
+        remark = #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="orgId != null" >
+        org_id = #{orgId,jdbcType=INTEGER},
+      </if>
+      <if test="isDeleted != null" >
+        is_deleted = #{isDeleted,jdbcType=TINYINT},
+      </if>
+      <if test="creator != null" >
+        creator = #{creator,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updator != null" >
+        updator = #{updator,jdbcType=INTEGER},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.jee4a.oss.auth.model.sys.SysRole" >
+    update sys_role
+    set role_name = #{roleName,jdbcType=VARCHAR},
+      remark = #{remark,jdbcType=VARCHAR},
+      org_id = #{orgId,jdbcType=INTEGER},
+      is_deleted = #{isDeleted,jdbcType=TINYINT},
+      creator = #{creator,jdbcType=INTEGER},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      updator = #{updator,jdbcType=INTEGER},
+      update_time = #{updateTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  
+  <select id="queryList" parameterType="com.jee4a.oss.auth.model.sys.SysRole" resultMap="BaseResultMap">
+  	select 
+	<include refid="Base_Column_List" />
+	from sys_role as r
+    INNER join sys_role_org as sro on sro.role_id = r.id and sro.is_deleted = 0
+    where r.is_deleted = 0 and r.state = 1
+	<if test="id !=null and id != ''">
+	and r.id = #{id,jdbcType=INTEGER}
+	</if>
+    <if test = "orgId != null" >
+        and sro.org_id = #{orgId,jdbcType=INTEGER}
+    </if>
+    <if test="deptIdList != null">
+        and sro.org_id in
+        <foreach item="item" index="index" collection="deptIdList" open="(" separator="," close=")" >
+            #{item,jdbcType=INTEGER}
+        </foreach>
+
+    </if>
+  </select>
+  
+  
+    <select id="selectByRoleName" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from sys_role r 
+    where r.role_name = #{roleName}
+  </select>
+  
+    <select id="queryUserRoleInfo" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+     from  sys_user_role sur 
+   	  left join sys_role r on sur.role_id=r.id 
+     where sur.user_id=#{userId} and sur.is_deleted = 0
+  </select>
+
+    <select id="queryRoleInfo" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+        select
+        sr.*,so.org_name as orgName
+        from  sys_role as sr
+        left join sys_role_org as sro on sro.role_id = sr.id and sro.is_deleted = 0
+        LEFT join sys_org as so on so.id = sro.org_id
+        where sr.id = #{id}
+    </select>
+
+</mapper>

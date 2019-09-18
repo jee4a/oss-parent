@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jee4a.oss.auth.mapper.SysRoleResourceMapper" >
+  <resultMap id="BaseResultMap" type="com.jee4a.oss.auth.model.sys.SysRoleResource" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="role_id" property="roleId" jdbcType="INTEGER" />
+    <result column="resource_id" property="resourceId" jdbcType="INTEGER" />
+    <result column="is_deleted" property="isDeleted" jdbcType="TINYINT" />
+    <result column="creator" property="creator" jdbcType="INTEGER" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="updator" property="updator" jdbcType="INTEGER" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, role_id, resource_id, is_deleted, creator, create_time, updator, update_time
+  </sql>
+  <!-- 基本的sql查询条件公共引用 -->
+	<sql id="searchBy">
+		<trim prefix="where" prefixOverrides="and|or">
+				id = id
+			<if test=" id !=null">
+				 and id = #{id,jdbcType=BIGINT}
+			</if>
+			<if test="roleId !=null">
+				and role_id = #{roleId,jdbcType=BIGINT}
+			</if>
+			<if test="resourceId !=null">
+				and resource_id = #{resourceId,jdbcType=BIGINT}
+			</if>
+			<if test="isDeleted !=null">
+				and is_deleted = #{isDeleted,jdbcType=BIGINT}
+			</if>
+			<if test="creator !=null and creator !=''">
+				and creator = #{creator,jdbcType=VARCHAR}
+			</if>
+			<if test="createTime !=null">
+				and create_time = #{createTime,jdbcType=TIMESTAMP}
+			</if>
+			<if test="updator !=null and updator !=''">
+				and updator = #{updator,jdbcType=VARCHAR}
+			</if>
+			<if test="updateTime !=null">
+				and update_time = #{updateTime,jdbcType=VARCHAR}
+			</if>
+			and is_deleted = 0
+		</trim>
+	</sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from sys_role_resource
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <select id="querySysRoleResourceList" resultMap="BaseResultMap"
+		parameterType="com.jee4a.oss.auth.model.sys.SysRoleResource">
+		select
+		<include refid="Base_Column_List" />
+		from sys_role_resource
+		<include refid="searchBy" />
+  </select>
+  <select id="querySysRoleResource" resultMap="BaseResultMap"
+		parameterType="com.jee4a.oss.auth.model.sys.SysRoleResource">
+		select
+		<include refid="Base_Column_List" />
+		from sys_role_resource
+		<include refid="searchBy" />
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from sys_role_resource
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.jee4a.oss.auth.model.sys.SysRoleResource" >
+    insert into sys_role_resource (id, role_id, resource_id, 
+      is_deleted, creator, create_time, 
+      updator, update_time)
+    values (#{id,jdbcType=INTEGER}, #{roleId,jdbcType=INTEGER}, #{resourceId,jdbcType=INTEGER}, 
+      #{isDeleted,jdbcType=TINYINT}, #{creator,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{updator,jdbcType=INTEGER}, #{updateTime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.jee4a.oss.auth.model.sys.SysRoleResource" >
+    insert into sys_role_resource
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="roleId != null" >
+        role_id,
+      </if>
+      <if test="resourceId != null" >
+        resource_id,
+      </if>
+      <if test="isDeleted != null" >
+        is_deleted,
+      </if>
+      <if test="creator != null" >
+        creator,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="updator != null" >
+        updator,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="roleId != null" >
+        #{roleId,jdbcType=INTEGER},
+      </if>
+      <if test="resourceId != null" >
+        #{resourceId,jdbcType=INTEGER},
+      </if>
+      <if test="isDeleted != null" >
+        #{isDeleted,jdbcType=TINYINT},
+      </if>
+      <if test="creator != null" >
+        #{creator,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updator != null" >
+        #{updator,jdbcType=INTEGER},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.jee4a.oss.auth.model.sys.SysRoleResource" >
+    update sys_role_resource
+    <set >
+      <if test="roleId != null" >
+        role_id = #{roleId,jdbcType=INTEGER},
+      </if>
+      <if test="resourceId != null" >
+        resource_id = #{resourceId,jdbcType=INTEGER},
+      </if>
+      <if test="isDeleted != null" >
+        is_deleted = #{isDeleted,jdbcType=TINYINT},
+      </if>
+      <if test="creator != null" >
+        creator = #{creator,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updator != null" >
+        updator = #{updator,jdbcType=INTEGER},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.jee4a.oss.auth.model.sys.SysRoleResource" >
+    update sys_role_resource
+    set role_id = #{roleId,jdbcType=INTEGER},
+      resource_id = #{resourceId,jdbcType=INTEGER},
+      is_deleted = #{isDeleted,jdbcType=TINYINT},
+      creator = #{creator,jdbcType=INTEGER},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      updator = #{updator,jdbcType=INTEGER},
+      update_time = #{updateTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

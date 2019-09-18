@@ -1,0 +1,482 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jee4a.oss.auth.mapper.SysUserMapper" >
+  <resultMap id="BaseResultMap" type="com.jee4a.oss.auth.model.sys.SysUser" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="user_name" property="userName" jdbcType="VARCHAR" />
+    <result column="user_pwd" property="userPwd" jdbcType="VARCHAR" />
+    <result column="salt" property="salt" jdbcType="VARCHAR" />
+    <result column="email" property="email" jdbcType="VARCHAR" />
+    <result column="mobile" property="mobile" jdbcType="VARCHAR" />
+    <result column="state" property="state" jdbcType="TINYINT" />
+    <result column="org_id" property="orgId" jdbcType="INTEGER" />
+    <result column="is_deleted" property="isDeleted" jdbcType="TINYINT" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="creator" property="creator" jdbcType="INTEGER" />
+    <result column="updator" property="updator" jdbcType="INTEGER" />
+    <result column="real_name" property="actualName" jdbcType="VARCHAR" />
+    <result column="position_id" property="positionId" jdbcType="INTEGER" />
+    <result column="staff_no" property="staffNo" jdbcType="VARCHAR" />
+    <result column="last_update_pwd_time" property="lastUpdatePwdTime" jdbcType="TIMESTAMP" />
+    <result column="is_data_authority" property="isDataAuthority" jdbcType="TINYINT" />
+  </resultMap>
+ 
+
+ <resultMap id="QueryPageResultMap" type="com.jee4a.oss.auth.common.vo.SysUserVO" extends="BaseResultMap">  
+    <result property="orgName" column="orgName"/>  
+ </resultMap>
+
+  <sql id="Base_Column_List" >
+    id, user_name, user_pwd, salt, email, mobile, state, org_id, is_deleted, 
+    create_time, update_time, creator, updator,real_name,position_id,staff_no,
+    last_update_pwd_time,is_data_authority
+  </sql>
+  <!-- 查询用户的所有权限 -->
+	<select id="queryAllPerms" resultType="string">
+		select m.perms from
+		sys_user_role ur
+		LEFT JOIN sys_role_resource rm on ur.role_id =rm.role_id
+		LEFT JOIN sys_resource m on rm.resource_id = m.id
+		where ur.user_id = #{userId} AND m.is_deleted = 0 and rm.is_deleted=0 and ur.is_deleted=0;
+	</select>
+
+
+	<!-- 查询用户的所有菜单ID -->
+	<select id="queryAllResourceId" resultType="Integer">
+		select 
+			distinct sr.url
+		from sys_user_role ur
+		LEFT JOIN sys_role_resource rm on ur.role_id = rm.role_id 
+		LEFT JOIN sys_resource sr on rm.resource_id = sr.id 
+		where 
+			ur.user_id = #{userId} 
+			and ur.is_deleted = 0 
+			and sr.is_show  = 1
+			and rm.is_deleted = 0
+			and sr.is_deleted = 0
+	</select>
+
+  
+  <!-- 查询用户的所有菜单ID -->
+	<select id="queryAllResourceUrl" resultType="Integer">
+		select 
+			distinct rm.resource_id 
+		from sys_user_role ur
+		LEFT JOIN sys_role_resource rm on ur.role_id = rm.role_id 
+		LEFT JOIN sys_resource sr on rm.resource_id = sr.id 
+		where 
+			ur.user_id = #{userId} 
+			and ur.is_deleted = 0 
+			and sr.is_show  = 1
+			and rm.is_deleted = 0
+			and sr.is_deleted = 0
+	</select>
+
+	<select id="selectByUserName" resultMap="BaseResultMap"
+		parameterType="java.lang.String">
+		select
+		<include refid="Base_Column_List" />
+		from sys_user
+		where user_name = #{userName,jdbcType=VARCHAR}
+		
+	</select>
+  
+  
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from sys_user
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from sys_user
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.jee4a.oss.auth.model.sys.SysUser" useGeneratedKeys="true" keyProperty="id" keyColumn="id" >
+    insert into sys_user (id, user_name, user_pwd, 
+      salt, email, mobile, 
+      position_id, state, org_id, 
+      is_deleted, create_time, update_time, 
+      creator, updator,real_name,staff_no,last_update_pwd_time,is_data_authority)
+    values (#{id,jdbcType=INTEGER}, #{userName,jdbcType=VARCHAR}, #{userPwd,jdbcType=VARCHAR}, 
+      #{salt,jdbcType=VARCHAR}, #{email,jdbcType=VARCHAR}, #{mobile,jdbcType=VARCHAR}, 
+      #{positionId,jdbcType=VARCHAR}, #{state,jdbcType=TINYINT}, #{orgId,jdbcType=INTEGER}, 
+      #{isDeleted,jdbcType=TINYINT}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}, 
+      #{creator,jdbcType=INTEGER}, #{updator,jdbcType=INTEGER},#{actualName,jdbcType=VARCHAR},
+      #{staffNo,jdbcType=VARCHAR},#{lastUpdatePwdTime,jdbcType=TIMESTAMP},#{isDataAuthority,jdbcType=TINYINT})
+  </insert>
+  <insert id="insertSelective" parameterType="com.jee4a.oss.auth.model.sys.SysUser" >
+    insert into sys_user
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <!-- <if test="id != null" >
+        id,
+      </if> -->
+      <if test="userName != null" >
+        user_name,
+      </if>
+      <if test="userPwd != null" >
+        user_pwd,
+      </if>
+      <if test="salt != null" >
+        salt,
+      </if>
+      <if test="email != null" >
+        email,
+      </if>
+      <if test="mobile != null" >
+        mobile,
+      </if>
+      <if test="positionId != null" >
+        position_id,
+      </if>
+      <if test="state != null" >
+        state,
+      </if>
+      <if test="orgId != null" >
+        org_id,
+      </if>
+      <if test="isDeleted != null" >
+        is_deleted,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+      <if test="creator != null" >
+        creator,
+      </if>
+      <if test="updator != null" >
+        updator,
+      </if>
+      <if test="actualName != null">
+      	real_name,
+      </if>
+      <if test="isDataAuthority != null">
+      	is_data_authority,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <!-- <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if> -->
+      <if test="userName != null" >
+        #{userName,jdbcType=VARCHAR},
+      </if>
+      <if test="userPwd != null" >
+        #{userPwd,jdbcType=VARCHAR},
+      </if>
+      <if test="salt != null" >
+        #{salt,jdbcType=VARCHAR},
+      </if>
+      <if test="email != null" >
+        #{email,jdbcType=VARCHAR},
+      </if>
+      <if test="mobile != null" >
+        #{mobile,jdbcType=VARCHAR},
+      </if>
+      <if test="positionId != null" >
+        #{positionId,jdbcType=VARCHAR},
+      </if>
+      <if test="state != null" >
+        #{state,jdbcType=TINYINT},
+      </if>
+      <if test="orgId != null" >
+        #{orgId,jdbcType=INTEGER},
+      </if>
+      <if test="isDeleted != null" >
+        #{isDeleted,jdbcType=TINYINT},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="creator != null" >
+        #{creator,jdbcType=INTEGER},
+      </if>
+      <if test="updator != null" >
+        #{updator,jdbcType=INTEGER},
+      </if>
+      <if test="actualName != null" >
+        #{actualName,jdbcType=VARCHAR},
+      </if>
+      <if test="isDataAuthority != null" >
+        #{isDataAuthority,jdbcType=TINYINT},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.jee4a.oss.auth.model.sys.SysUser" >
+    update sys_user
+    <set >
+      <if test="userName != null and userName != ''" >
+        user_name = #{userName,jdbcType=VARCHAR},
+      </if>
+      <if test="userPwd != null and userPwd != ''" >
+        user_pwd = #{userPwd,jdbcType=VARCHAR},
+      </if>
+      <if test="salt != null and salt !=''" >
+        salt = #{salt,jdbcType=VARCHAR},
+      </if>
+      <if test="email != null and email !='' " >
+        email = #{email,jdbcType=VARCHAR},
+      </if>
+      <if test="mobile != null and mobile !='' " >
+        mobile = #{mobile,jdbcType=VARCHAR},
+      </if>
+      <if test="positionId != null" >
+        position_id = #{positionId,jdbcType=VARCHAR},
+      </if>
+      <if test="state != null" >
+        state = #{state,jdbcType=TINYINT},
+      </if>
+      <if test="orgId != null" >
+        org_id = #{orgId,jdbcType=INTEGER},
+      </if>
+      <if test="isDeleted != null" >
+        is_deleted = #{isDeleted,jdbcType=TINYINT},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="creator != null" >
+        creator = #{creator,jdbcType=INTEGER},
+      </if>
+      <if test="updator != null" >
+        updator = #{updator,jdbcType=INTEGER},
+      </if>
+      <if test="actualName != null and actualName != ''" >
+        real_name = #{actualName,jdbcType=VARCHAR},
+      </if>
+      <if test="staffNo !=null and staffNo !=''">
+        staff_no = #{staffNo,jdbcType=VARCHAR},
+      </if>
+       <if test="lastUpdatePwdTime != null" >
+        last_update_pwd_time = #{lastUpdatePwdTime,jdbcType=INTEGER},
+      </if>
+       <if test="staffNo != null" >
+        staff_no = #{staffNo,jdbcType=INTEGER},
+      </if>
+       <if test="isDataAuthority != null" >
+        is_data_authority = #{isDataAuthority,jdbcType=TINYINT}
+      </if>
+      
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.jee4a.oss.auth.model.sys.SysUser" >
+    update sys_user
+    set user_name = #{userName,jdbcType=VARCHAR},
+      user_pwd = #{userPwd,jdbcType=VARCHAR},
+      salt = #{salt,jdbcType=VARCHAR},
+      email = #{email,jdbcType=VARCHAR},
+      mobile = #{mobile,jdbcType=VARCHAR},
+      position_id = #{positionId,jdbcType=VARCHAR},
+      state = #{state,jdbcType=TINYINT},
+      org_id = #{orgId,jdbcType=INTEGER},
+      is_deleted = #{isDeleted,jdbcType=TINYINT},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      creator = #{creator,jdbcType=INTEGER},
+      updator = #{updator,jdbcType=INTEGER},
+      is_data_authority = #{isDataAuthority,jdbcType=TINYINT}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  
+  <select id="queryPage" parameterType="com.jee4a.oss.auth.common.vo.SysUserVO" resultMap="QueryPageResultMap">
+      select
+          su.id as id,
+          su.user_name as userName,
+          so.org_name as orgName,
+          su.position_id as positionId,
+          su.email as email,
+          su.mobile as mobile,
+          su.state as state,
+          su.create_time as createTime,
+          sp.position_name as positionName ,
+          sr.role_name as roleName,
+          su.staff_no as staffNo,
+          su.real_name as actualName,
+          s.user_name as createName,
+          su.update_time as updateTime,
+          s1.user_name as updateName
+      from sys_user  su
+      left JOIN sys_user_role as sur on sur.user_id = su.id and sur.is_deleted=0
+      left JOIN sys_role as sr on sr.id = sur.role_id and sr.is_deleted=0
+      left JOIN sys_role_org as sro on sro.role_id = sur.role_id and sro.is_deleted=0
+      left JOIN sys_org as so on so.id = sro.org_id and so.is_deleted=0
+      left join sys_position as sp on sp.id = su.position_id
+      left join sys_user s on su.creator =s.id
+      left join sys_user s1 on su.updator =s1.id
+      where su.is_deleted = 0
+  	 <if test="state != null ">
+    	and su.state = #{state,jdbcType=INTEGER}
+     </if>
+      <if test="isDataAuthority == 0 ">
+    	and su.id= #{id,jdbcType=INTEGER}
+     </if>
+     <!-- 如果数据权限是1 并且orgChildIds不是null 查询自己和自己部门下的用户信息 -->
+     <if test="orgChildIds != null">
+     		and   so.id in
+   		<foreach item="item" index="index" collection="orgChildIds"
+	        open="(" separator="," close=")" >
+	        #{item,jdbcType=INTEGER}
+   		</foreach>
+     </if>
+    
+     <if test="orgId != null ">
+    	and su.org_id = #{orgId,jdbcType=INTEGER}
+     </if>
+  	 <if test="userName != null and userName != ''">
+    	and (su.user_name = #{userName,jdbcType=VARCHAR} or su.real_name = #{userName,jdbcType=VARCHAR})
+   	 </if>
+     <if test="beginCreateTime != null and beginCreateTime != '' ">
+    	 <![CDATA[ and   su.create_time >= #{beginCreateTime,jdbcType=TIMESTAMP} ]]>
+     </if>
+     <if test="endCreateTime != null and endCreateTime !=''">
+    	 <![CDATA[ and   su.create_time <= #{endCreateTime,jdbcType=TIMESTAMP}  ]]>
+     </if>
+     <if test="beginUpdateTime != null and beginUpdateTime != '' ">
+     	<![CDATA[ and    su.update_time >= #{beginUpdateTime,jdbcType=TIMESTAMP} ]]>
+     </if>
+     <if test="endUpdateTime != null and endUpdateTime !=''">
+    	 <![CDATA[ and   su.update_time <= #{endUpdateTime,jdbcType=TIMESTAMP}  ]]>
+     </if>
+  	order by su.create_time desc
+  	
+  </select>
+  
+  <select id="selectByPrimaryKeySelective" parameterType="com.jee4a.oss.auth.model.sys.SysUser" resultMap="BaseResultMap">
+  	select 
+    <include refid="Base_Column_List" />
+    from sys_user
+    where id = id
+    <if test=" id != null">
+    	and id = #{id,jdbcType=INTEGER}
+    </if>
+    <if test=" state != null">
+    	and state = #{state,jdbcType=INTEGER}
+    </if>
+    <if test=" userName != null and userName !=''">
+    	and user_name = #{userName,jdbcType=VARCHAR}
+    </if>
+    <if test=" isDeleted != null and isDeleted !=''">
+    	and is_deleted = #{isDeleted,jdbcType=VARCHAR}
+    </if>
+    <if test=" positionId !=null and positionId !=''">
+    	and position_id = #{positionId,jdbcType=VARCHAR}
+    </if>
+  </select>
+  
+  <select id="queryByName" resultMap="BaseResultMap"
+		parameterType="java.lang.String">
+		select
+		<include refid="Base_Column_List" />
+		from sys_user
+		where user_name = #{userName,jdbcType=VARCHAR}
+	</select>
+	
+	 
+	
+	<select id="selectUserDeailts" parameterType="java.lang.Integer" resultType="com.jee4a.oss.auth.common.vo.SysUserVO">
+		select 
+			su.id as id, 
+			su.user_name as userName, 
+			su.user_pwd as userPwd,
+			su.email as email,
+			su.mobile as mobile,
+			su.state as state, 
+			so.id as orgId,
+			su.is_deleted as isDeleted, 
+    		su.create_time as createTime, 
+    		su.real_name as realName,
+    		su.position_id as positionId,
+			sp.position_name as positionName,
+    		su.staff_no as staffNo,
+    		so.org_name as orgName,
+    		su.real_name as actualName,
+    		MAX(sr.role_name) as roleName,
+    		su.is_data_authority as isDataAuthority,
+    		s1.user_name as updateName,
+    		s.user_name as createName,
+    		su.update_time as updateTime,
+    		MAX(sr.id) as roleId,
+    		su.salt as salt
+    	from sys_user as su
+    	left join sys_user_role as sur on sur.user_id = su.id and sur.is_deleted=0
+    	LEFT join sys_role_org as sro on sro.role_id = sur.role_id
+    	left join sys_org as so on so.id = sro.org_id
+		LEFT JOIN sys_position as sp on sp.id = su.position_id and sp.is_deleted=0
+    	left join sys_role as sr on sr.id = sur.role_id and sr.is_deleted=0
+    	left join sys_user s on su.creator =s.id 
+  		left join sys_user s1 on su.updator =s1.id 
+    	where su.id = #{userId} group by su.id
+	</select>
+	
+	  
+  <select id="findByMap" resultMap="BaseResultMap"	parameterType="map">
+		select  *	from 
+			sys_user
+			<where>
+				<if test=" id != null">
+			    	and id = #{id,jdbcType=INTEGER}
+			    </if>
+			    <if test=" state != null">
+			    	and state = #{state,jdbcType=INTEGER}
+			    </if>
+			    <if test=" userPwd != null">
+			    	and user_pwd = #{userPwd,jdbcType=VARCHAR}
+			    </if>
+			    <if test=" userName != null and userName !=''">
+			    	and user_name = #{userName,jdbcType=VARCHAR}
+			    </if>
+			    <if test=" isDeleted != null">
+			    	and is_deleted = #{isDeleted,jdbcType=INTEGER}
+			    </if>
+			    <if test=" positionId !=null ">
+			    	and position_id = #{positionId,jdbcType=INTEGER}
+			    </if>
+			    <if test=" mobile !=null ">
+			    	and mobile = #{mobile,jdbcType=VARCHAR}
+			    </if>
+			    <if test=" salt !=null and salt !=''">
+			    	and salt = #{salt,jdbcType=VARCHAR}
+			    </if>
+			    <if test=" email !=null and email != ''">
+			    	and email = #{email,jdbcType=VARCHAR}
+			    </if>
+			    <if test=" orgId !=null ">
+			    	and org_id = #{orgId,jdbcType=INTEGER}
+			    </if>
+			    <if test=" actualName !=null and actualName != ''">
+			    	and real_name = #{actualName,jdbcType=VARCHAR}
+			    </if>
+			    <if test=" staffNo !=null and staffNo != ''">
+			    	and staff_no = #{staffNo,jdbcType=VARCHAR}
+			    </if>
+			    <if test=" updator !=null ">
+			    	and updator = #{updator,jdbcType=INTEGER}
+			    </if>
+			    <if test=" creator !=null ">
+			    	and creator = #{creator,jdbcType=INTEGER}
+			    </if>
+			    <if test=" isDataAuthority !=null ">
+			    	and is_data_authority = #{isDataAuthority,jdbcType=TINYINT}
+			    </if>
+			</where>
+	</select>
+	
+	   <select id="selectByMobile" resultMap="BaseResultMap"
+        parameterType="java.lang.String">
+        select
+        <include refid="Base_Column_List" />
+        from sys_user
+        where mobile = #{mobile,jdbcType=VARCHAR}
+    </select>
+</mapper>
