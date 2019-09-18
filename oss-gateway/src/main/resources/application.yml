@@ -4,7 +4,7 @@ spring:
   application:
     name: gateway-server
   profiles:
-    active: @spring.profiles.active@
+    active: '@spring.profiles.active@'
   cloud:
     gateway:
       routes:

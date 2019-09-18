@@ -42,7 +42,7 @@ import com.jee4a.oss.framework.lang.PasswordUtils;
  * @date 2019年7月23日
  */
 @Service
-public class LoginService extends BaseService {
+public class SysLoginService extends BaseService {
 	
 	protected  static final PathMatcher pathMatcher = new AntPathMatcher() ;
 	

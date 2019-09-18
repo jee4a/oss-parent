@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.jee4a.oss.auth.service.LoginService;
+import com.jee4a.oss.auth.service.SysLoginService;
 import com.jee4a.oss.framework.BaseController;
 import com.jee4a.oss.framework.Result;
 import com.jee4a.oss.framework.custom.LoginInfoVO;
@@ -22,12 +22,12 @@ import com.jee4a.oss.framework.custom.NoneLoginAnnotation;
 public class LoginController extends BaseController {
 
 	@Resource
-	private LoginService loginService;
+	private SysLoginService sysLoginService;
 
 	@NoneLoginAnnotation
 	@RequestMapping(value = "captcha.jpg", method = RequestMethod.GET)
 	public void captcha(String sessionId, HttpServletResponse response) {
-		loginService.createCaptcha(sessionId, response);
+		sysLoginService.createCaptcha(sessionId, response);
 	}
 	/**
 	 * 
@@ -42,7 +42,7 @@ public class LoginController extends BaseController {
 	@RequestMapping(value = "/login", method = RequestMethod.POST, produces = { "application/json" })
 	public Result<?> doLogin(String sessionId,String userName, String password, String captcha, 
 			@RequestHeader("user-agent") String userAgent, HttpServletResponse response) {
-		return loginService.login(captcha, sessionId, userName, password, this.getRemoteIp(), userAgent, response);
+		return sysLoginService.login(captcha, sessionId, userName, password, this.getRemoteIp(), userAgent, response);
 	}
 
 	/**

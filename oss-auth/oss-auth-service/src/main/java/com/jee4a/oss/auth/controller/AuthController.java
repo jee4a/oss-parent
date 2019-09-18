@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.jee4a.oss.auth.service.AuthService;
+import com.jee4a.oss.auth.service.SysAuthService;
 import com.jee4a.oss.framework.BaseController;
 import com.jee4a.oss.framework.Result;
 import com.jee4a.oss.framework.custom.NoneLoginAnnotation;
@@ -19,11 +19,11 @@ import com.jee4a.oss.framework.custom.NoneLoginAnnotation;
 public class AuthController extends  BaseController {
 
 	@Resource
-	private AuthService authService;
+	private SysAuthService sysAuthService;
 	 
 	@NoneLoginAnnotation
 	@RequestMapping(value = "/auth", method = RequestMethod.POST, produces = { "application/json" })
 	public Result<?> hasPermission(Integer userId,String reqUrl) {
-		return  authService.hasPermission(userId, reqUrl) ;
+		return  sysAuthService.hasPermission(userId, reqUrl) ;
 	}
 }

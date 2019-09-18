@@ -1,9 +1,7 @@
 package com.jee4a.oss.gateway.filters;
 
-import com.auth0.jwt.JWT;
-import com.auth0.jwt.interfaces.DecodedJWT;
-import com.jee4a.oss.framework.CommonConstants;
-import com.jee4a.oss.framework.lang.StringUtils;
+import java.net.URI;
+import java.net.URISyntaxException;
 
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;
 import org.springframework.cloud.gateway.filter.GlobalFilter;
@@ -12,10 +10,13 @@ import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.stereotype.Component;
 import org.springframework.web.server.ServerWebExchange;
 import org.springframework.web.util.UriComponentsBuilder;
-import reactor.core.publisher.Mono;
 
-import java.net.URI;
-import java.net.URISyntaxException;
+import com.auth0.jwt.JWT;
+import com.auth0.jwt.interfaces.DecodedJWT;
+import com.jee4a.oss.framework.CommonConstants;
+import com.jee4a.oss.framework.lang.StringUtils;
+
+import reactor.core.publisher.Mono;
 
 
 /**
@@ -43,7 +44,7 @@ public class TokenDecodeFilter implements GlobalFilter,Ordered {
             }
             DecodedJWT jwt = JWT.decode(token);
             String userId = jwt.getClaim(CommonConstants.JWT_PAYLOAD_CLAIMS).asString() ;
-            request.getQueryParams().add("userId",userId);
+            request.getHeaders().add("userId",userId);
         } catch (URISyntaxException e) {
             e.printStackTrace();
         }

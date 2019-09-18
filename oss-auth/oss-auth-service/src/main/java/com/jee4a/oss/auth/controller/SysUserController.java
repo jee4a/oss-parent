@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.github.pagehelper.PageInfo;
 import com.jee4a.oss.auth.common.vo.SysUserVO;
-import com.jee4a.oss.auth.service.AuthService;
+import com.jee4a.oss.auth.service.SysAuthService;
 import com.jee4a.oss.auth.service.SysPositionService;
 import com.jee4a.oss.auth.service.SysUserService;
 import com.jee4a.oss.framework.BaseController;
@@ -33,7 +33,7 @@ public class SysUserController  extends  BaseController{
 	private SysUserService sysUserService  ;
 
 	@Resource
-	private  AuthService authService ;
+	private  SysAuthService sysAuthService ;
 	 
 	@Resource
 	private SysPositionService sysPositionService;
@@ -97,7 +97,7 @@ public class SysUserController  extends  BaseController{
 	
 	@RequestMapping(value = "/hasPermission" , method = RequestMethod.GET ,produces={"application/json"})
 	public Result getUserPerms(Integer userId,String url) {
-		return authService.hasPermission(userId, url);
+		return sysAuthService.hasPermission(userId, url);
 	}
 	
 	@NoneLoginAnnotation

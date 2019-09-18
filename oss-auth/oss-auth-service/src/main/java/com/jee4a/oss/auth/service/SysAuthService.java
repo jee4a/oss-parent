@@ -29,7 +29,7 @@ import com.jee4a.oss.framework.lang.StringUtils;
  * @date 2019年7月23日
  */
 @Service
-public class AuthService extends BaseService {
+public class SysAuthService extends BaseService {
 	
 	private final PathMatcher pathMatcher = new AntPathMatcher();
 	
