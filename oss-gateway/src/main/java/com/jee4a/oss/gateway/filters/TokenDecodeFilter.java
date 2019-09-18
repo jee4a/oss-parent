@@ -25,7 +25,7 @@ import java.net.URISyntaxException;
  * @date 2019/8/1216:50
  */
 @Component
-public class TokenFilter implements GlobalFilter,Ordered {
+public class TokenDecodeFilter implements GlobalFilter,Ordered {
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
         ServerHttpRequest request = null;
@@ -43,10 +43,6 @@ public class TokenFilter implements GlobalFilter,Ordered {
             }
             DecodedJWT jwt = JWT.decode(token);
             String userId = jwt.getClaim(CommonConstants.JWT_PAYLOAD_CLAIMS).asString() ;
-            //userId为空
-           /* if (userId == null){
-                return chain.filter(exchange.mutate().request(this.failRequest(exchange)).build());
-            }*/
             request.getQueryParams().add("userId",userId);
         } catch (URISyntaxException e) {
             e.printStackTrace();
