@@ -20,7 +20,6 @@ import java.net.URISyntaxException;
 
 /**
  * @author tpeng
- * @Title: LoginResolutionGlobalFilter
  * @ProjectName oss-parent
  * @Description: 全局过滤，验证登录token
  * @date 2019/8/1216:50
