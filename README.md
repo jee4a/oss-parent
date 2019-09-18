@@ -93,7 +93,7 @@ oss-xxxx-service
 
 ## Q&A
 
-## XX金融系统服务化迁移  
+## XX金融平台服务化迁移  
 总体设计及框架搭建：tpeng
 
 
