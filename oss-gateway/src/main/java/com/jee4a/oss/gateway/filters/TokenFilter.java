@@ -33,7 +33,7 @@ public class TokenFilter implements GlobalFilter,Ordered {
             request =  exchange.getRequest();
             String token = request.getQueryParams().getFirst("token");
             //token 不存在
-            if (StringUtils.isEmpty(token)){
+            if (StringUtils.isBlank(token)){
                 return chain.filter(exchange.mutate().request(this.failRequest(exchange)).build());
             }
             String arg[] = token.split("\\.");
