@@ -26,7 +26,7 @@ import java.net.URISyntaxException;
  * @date 2019/8/1216:50
  */
 @Component
-public class LoginResolutionGlobalFilter implements GlobalFilter,Ordered {
+public class TokenFilter implements GlobalFilter,Ordered {
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
         ServerHttpRequest request = null;
