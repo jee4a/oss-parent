@@ -34,9 +34,11 @@ oss-parent/pom.xml 版本管理，依赖库，环境打包
 - oss-job 任务调度 	
 - 微服务	
 - oss-member 会员服务 	
-- oss-assets 标的，资金，产品等
-- oss-fund 资金，放款，还款，充值，提现等	
-- oss-depository 存管	
+- oss-order 订单服务
+- oss-product 商品服务 	
+- oss-shop 商家，门店服务 	
+- oss-pay 支付，充值，提现等	
+- oss-settlement 结算	
 - oss-activity 活动服务 	
 - oss-cms 内容管理 	
 - oss-comment 评论服务 	
