@@ -3,7 +3,7 @@ server:
   servlet:    context-path: /
 spring:
   application:
-    name: auth-server
+    name: auth-service
   profiles:
     active: @spring.profiles.active@
   jackson:    date-format: yyyy-MM-dd HH:mm:ss
